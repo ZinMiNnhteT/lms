@@ -46,8 +46,8 @@ export default function Home() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/login"); // redirect to login page
-          toast.success('Sigout Successfully!')
+          router.push("/"); // redirect to login page
+          toast.success('Signed out Successfully!')
         },
       },
     });
