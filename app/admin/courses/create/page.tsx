@@ -13,6 +13,7 @@ import slugify from 'slugify';
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import { Uploader } from "@/components/file-uploader/Uploader";
 
 export default function CourseCreationPage() {
 
@@ -125,10 +126,7 @@ export default function CourseCreationPage() {
                                     <FormItem className="w-full">
                                         <FormLabel>Description</FormLabel>
                                             <FormControl>
-                                                <RichTextEditor />
-                                                {/* <Textarea placeholder="Description"
-                                                className="min-h-[120px]" 
-                                                {...field} /> */}
+                                                <RichTextEditor field={field} />
                                             </FormControl>
                                             <FormMessage />
                                     </FormItem>
@@ -142,7 +140,8 @@ export default function CourseCreationPage() {
                                     <FormItem className="w-full">
                                         <FormLabel>Thumbnail image</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="thumbnail url" {...field} />
+                                                <Uploader />
+                                                {/* <Input placeholder="thumbnail url" {...field} /> */}
                                             </FormControl>
                                             <FormMessage />
                                     </FormItem>
