@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { Card, CardContent } from "../ui/card";
 import { cn } from "@/lib/utils";
-import { RenderEmptyState, RenderErrorState } from "./RenderState";
+import { RenderEmptyState, RenderErrorState, RenderUploadedState, RenderUploadingState } from "./RenderState";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { resolve } from "path";
@@ -124,6 +124,10 @@ export function Uploader() {
         if(acceptedFiles.length > 0) {
             const file = acceptedFiles[0]
 
+            if(fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+                URL.revokeObjectURL(fileState.objectUrl)
+            }
+
             setFileState({
                 file: file,
                 uploading: false,
@@ -137,7 +141,63 @@ export function Uploader() {
 
             uploadFile(file)
         }
-    }, []);
+    }, [fileState.objectUrl]);
+
+    async function handleRemoveFile() {
+        if (fileState.isDeleting || !fileState.objectUrl) return;
+
+        try {
+            setFileState((prev) => ({
+                ...prev,
+                isDeleting: true,
+            }));
+
+            const reponse = await fetch("/api/s3/delete", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify({
+                    key: fileState.key,
+                })
+            });
+
+            if(!reponse.ok) {
+                toast.error("Failed to remove file from storage");
+
+                setFileState((prev) => ({
+                    ...prev,
+                    isDeleting: true,
+                    error: true,
+                }));
+
+                return;
+            }
+
+            if(fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+                URL.revokeObjectURL(fileState.objectUrl)
+            }
+
+            setFileState(() => ({
+                file: null,
+                uploading: false,
+                progress: 0,
+                objectUrl: undefined,
+                error: false,
+                fileType: "image",
+                id: null,
+                isDeleting: false,
+            }));
+
+            toast.success("File removed successfully");
+        } catch {
+            toast.error('Error removing file. please try agian')
+
+            setFileState((prev) => ({
+                ...prev,
+                isDeleting: true,
+                error: true,
+            }));
+        }
+    }
 
     function rejectedFiles(fileRejection: FileRejection[]) {
         if(fileRejection.length) {
@@ -161,30 +221,48 @@ export function Uploader() {
 
     function renderContent() {
         if(fileState.uploading) {
-            return <h1>Uploading...</h1>;
+            return (
+                <RenderUploadingState file={fileState.file as File} progress={fileState.progress} />
+            )
         }
 
         if(fileState.error) {
             return <RenderErrorState />;
         }
 
-        if(fileState.objectUrl) {
-            return <h1>uploaded file</h1>;
+        if (fileState.objectUrl) {
+            return(
+                <RenderUploadedState 
+                    handleRemoveFile={handleRemoveFile} 
+                    previewUrl={fileState.objectUrl}
+                    isDeleting={fileState.isDeleting}
+                />
+            )
         }
 
         return <RenderEmptyState isDragActive={isDragActive} />;
     }
+
+    useEffect(() => {
+        return () => {
+            if(fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+                URL.revokeObjectURL(fileState.objectUrl)
+            }
+        }
+    }, [fileState.objectUrl]);
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({ onDrop,
         accept: {"image/*": []},
         maxFiles: 1,
         multiple: false,
         maxSize: 5 * 1024 * 1024, // 5mb
-        onDropRejected: rejectedFiles
+        onDropRejected: rejectedFiles,
+        disabled: fileState.uploading || !!fileState.objectUrl,
     });
 
     return (
-        <Card {...getRootProps()} 
+        <Card
+            {...getRootProps()} 
             className={cn(
                 "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full h-64", 
                 isDragActive 
