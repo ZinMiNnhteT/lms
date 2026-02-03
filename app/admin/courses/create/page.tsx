@@ -3,7 +3,7 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { courseSchema, CourseSchemaType, courseLevels, courseStatus, courseCategories } from "@/lib/zodSchemas";
-import { ArrowLeft, PlusIcon, SparkleIcon } from "lucide-react";
+import { ArrowLeft, Loader2, PlusIcon, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -14,8 +14,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 import { Uploader } from "@/components/file-uploader/Uploader";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { CreateCourse } from "./actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CourseCreationPage() {
+    const [pending, startTransition] = useTransition();
+    const router = useRouter();
 
     const form = useForm<CourseSchemaType>({
         resolver: zodResolver(courseSchema),
@@ -33,8 +40,25 @@ export default function CourseCreationPage() {
         },
     });
 
-    function onSubmit(data: CourseSchemaType) {
-        console.log(data)
+    function onSubmit(values: CourseSchemaType) {
+        startTransition(async () => {
+            const { data:result, error } = await tryCatch(CreateCourse(values));
+
+            if(error) {
+                toast.error("An unexpect error occurred. Please try again.");
+                return;
+            }
+
+            if(result.status === "success") {
+                toast.success(result.message)
+                form.reset()
+                router.push('/admin/courses')
+
+
+            } else if(result.status === "error") {
+                toast.error(result.message);
+            }
+        });
     }
 
     return (
@@ -140,8 +164,9 @@ export default function CourseCreationPage() {
                                     <FormItem className="w-full">
                                         <FormLabel>Thumbnail image</FormLabel>
                                             <FormControl>
-                                                <Uploader />
-                                                {/* <Input placeholder="thumbnail url" {...field} /> */}
+                                                <Uploader 
+                                                    onChange={field.onChange} 
+                                                    value={field.value} />
                                             </FormControl>
                                             <FormMessage />
                                     </FormItem>
@@ -263,8 +288,18 @@ export default function CourseCreationPage() {
                                 )}
                             />
 
-                            <Button>
-                                Create Course <PlusIcon className="ml-2" />
+                            <Button type="submit" disabled={pending}>
+                                {pending ? (
+                                    <>
+                                    Creating...
+
+                                    <Loader2 className="animate-spin ml-1" />
+                                    </>
+                                ) : (
+                                    <>
+                                    Create Course <PlusIcon className="ml-1" size={16} />
+                                    </>
+                                )}
                             </Button>
                         </form>
                     </Form>
