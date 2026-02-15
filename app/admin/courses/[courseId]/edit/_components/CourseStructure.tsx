@@ -7,7 +7,6 @@ import { ReactNode, useEffect, useState } from "react";
 import {CSS} from '@dnd-kit/utilities';
 import { AdminCoureSingularType } from "@/app/data/admin/admin-get-course";
 import { cn } from "@/lib/utils";
-import { listeners } from "process";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { ChevronDown, ChevronRight, FileText, GripVertical, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

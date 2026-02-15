@@ -37,7 +37,7 @@ export function DeleteLesson({
         })
     }
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>;
+        <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 <Button variant="ghost" size="icon">
                     <Trash2 className="size-4" />
