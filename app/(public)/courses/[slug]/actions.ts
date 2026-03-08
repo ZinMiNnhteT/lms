@@ -145,7 +145,7 @@ export async function enrollInCourseAction(courseId: string): Promise<ApiRespons
                 cancel_url: `${env.BETTER_AUTH_URL}/cancel`,
                 metadata: {
                     userId: user.id,
-                    cousrseId: course.id,
+                    courseId: course.id,
                     enrollmentId: enrollment.id,
                 },
             });

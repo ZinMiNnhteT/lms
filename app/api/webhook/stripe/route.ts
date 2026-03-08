@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         });
 
         if(!user) {
-            throw new Error("User not found...");
+            throw new Error("User not found...")
         }
 
         await prisma.enrollment.update({
