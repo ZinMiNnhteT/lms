@@ -1,11 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { CourseSchemaType } from "@/lib/zodSchemas";
-import { startTransition, useTransition } from "react";
+import { useTransition } from "react";
 import { enrollInCourseAction } from "../actions";
 import { toast } from "sonner";
-import { tryCatch } from "@/hooks/try-catch";
 import { Loader2 } from "lucide-react";
 
 export function EnrollmentButton({courseId}: {courseId: string}) {
@@ -13,12 +11,7 @@ const [pending, startTransition] = useTransition();
 
     function onSubmit() {
         startTransition(async () => {
-            const { data:result, error } = await tryCatch(enrollInCourseAction(courseId));
-
-            if(error) {
-                toast.error("An unexpect error occurred. Please try again.");
-                return;
-            }
+            const result = await enrollInCourseAction(courseId);
 
             if(result.status === "success") {
                 toast.success(result.message)
