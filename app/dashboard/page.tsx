@@ -1,18 +1,19 @@
 import { EmptyState } from "@/components/general/EmptyState";
 import { getAllCourses } from "../data/course/get-all-courses";
-import { geteEnrolledCourses } from "../data/user/get-enrolled-courses";
+import { getEnrolledCourses } from "../data/user/get-enrolled-courses";
 import { PublicCourseCard } from "../(public)/_components/PublicCourseCard";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const [courses, enrolledCourses] = await Promise.all([
     getAllCourses(),
-    geteEnrolledCourses(),
+    getEnrolledCourses(),
   ]);
   
   return (
     <>
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-blod">Enrolled Courses</h1>
+        <h1 className="text-3xl font-bold">Enrolled Courses</h1>
         <p className="text-muted-foreground">Here you can see all the courses you have access to </p>
       </div>
 
@@ -23,10 +24,10 @@ export default async function DashboardPage() {
           buttonText="Purchase a course"
           href="/courses"
         />
-      ): (
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {enrolledCourses.map((course) => (
-            <PublicCourseCard key={course.course.id} data={course.course} />
+          {enrolledCourses.map(({ course }) => (
+            <Link key={course.id} href={`/dashboard/${course.slug}`}>{course.title}</Link>
           ))}
         </div>
       )}
@@ -47,11 +48,11 @@ export default async function DashboardPage() {
         ).length === 0 ? (
           <EmptyState
             title="No course available"
-            description="You have already puchases all avaliable coures"
+            description="You have already purchases all available courses"
             buttonText="Browse Courses"
             href="/courses"
           />
-        ):
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {courses.filter(
               (course) =>
@@ -62,7 +63,7 @@ export default async function DashboardPage() {
               <PublicCourseCard key={course.id} data={course} />
             ))}
           </div>
-        }
+        )}
       </section>
     </>
   )
