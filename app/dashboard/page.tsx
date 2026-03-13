@@ -2,7 +2,6 @@ import { EmptyState } from "@/components/general/EmptyState";
 import { getAllCourses } from "../data/course/get-all-courses";
 import { getEnrolledCourses } from "../data/user/get-enrolled-courses";
 import { PublicCourseCard } from "../(public)/_components/PublicCourseCard";
-import Link from "next/link";
 import { CourseProgressCard } from "./_components/CourseProgressCard";
 
 export default async function DashboardPage() {
@@ -27,8 +26,8 @@ export default async function DashboardPage() {
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {enrolledCourses.map(({ course }) => (
-            <CourseProgressCard key={course.course.id} data={course} />
+          {enrolledCourses.map((enrollment) => (
+            <CourseProgressCard key={enrollment.course.id} data={enrollment} />
           ))}
         </div>
       )}
@@ -44,7 +43,7 @@ export default async function DashboardPage() {
         {courses.filter(
           (course) =>
             !enrolledCourses.some(
-              ({ course: enrolled }) => enrolled.id === course.id
+              (enrollment) => enrollment.course.id === course.id
             )
         ).length === 0 ? (
           <EmptyState
@@ -58,7 +57,7 @@ export default async function DashboardPage() {
             {courses.filter(
               (course) =>
                 !enrolledCourses.some(
-                  ({ course: enrolled }) => enrolled.id === course.id
+                  (enrollment) => enrollment.course.id === course.id
                 )
             ).map((course) => (
               <PublicCourseCard key={course.id} data={course} />

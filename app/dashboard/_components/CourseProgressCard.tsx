@@ -4,6 +4,7 @@ import { EnrolledCourseType } from "@/app/data/user/get-enrolled-courses";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { useCourseProgress } from "@/hooks/use-course-progress";
 import Image from "next/image";
@@ -36,11 +37,14 @@ export function CourseProgressCard({ data }: iAppProps) {
                     {data.course.smallDescription}
                 </p>
 
-                <div className="space-y-4">
-                    <div>
+                <div className="space-y-4 mt-5">
+                    <div className="flex justify-between mb-1 text-sm">
                         <p>Progress:</p>
                         <p className="font-medium">{progressPercentate}%</p>
                     </div>
+                    <Progress value={progressPercentate} className="h-1.5" />
+
+                    <p className="text-xs text-muted-foreground mt-1">{completedLessons} of {totalLessons} lessons completed</p>
                 </div>
 
                 <Link href={`/dashboard/${data.course.slug}`} className={buttonVariants({ className: "w-full mt-4" })}>
