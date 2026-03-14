@@ -4,8 +4,10 @@ import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Menubar } from "./Menubar";
 import { TextAlign } from "@tiptap/extension-text-align";
+import { ControllerRenderProps } from "react-hook-form";
 
-export function RichTextEditor({field}: {field: any}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function RichTextEditor({ field }: { field: ControllerRenderProps<any, any> }) {
     const editor = useEditor({
         extensions: [StarterKit,
             TextAlign.configure({

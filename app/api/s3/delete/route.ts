@@ -1,10 +1,7 @@
 import { requireAdmin } from "@/app/data/admin/require-admin";
 import arcjet, { fixedWindow } from "@/lib/arcjet";
-import { auth } from "@/lib/auth";
 import { S3 } from "@/lib/S3Client";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { error } from "console";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { env } from "process";
 

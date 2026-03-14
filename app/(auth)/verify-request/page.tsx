@@ -7,20 +7,20 @@ import { authClient } from "@/lib/auth-client";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, Suspense } from "react";
 import { toast } from "sonner";
 
-export default function VerifyRequest() {
+export function VerifyRequestContent() {
     const router = useRouter();
     const [otp, setOtp] = useState("");
-    const [ emailPending, startTranstion] = useTransition();
+    const [ emailPending, startTransition] = useTransition();
     const params = useSearchParams();
-    const email = params.get('email') as string;
+    const email = params.get('email') ?? "";
     const isOptComplete = otp.length === 6;
 
 
     function verifyOtp() {
-        startTranstion(async () => {
+        startTransition(async () => {
            await authClient.signIn.emailOtp({
             email: email,
             otp: otp,
@@ -84,3 +84,15 @@ export default function VerifyRequest() {
         </Card>
     )
 } 
+
+export default function VerifyRequest() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-[200px]">
+                <Loader2 className="animate-spin text-muted-foreground" />
+            </div>
+        }>
+            <VerifyRequestContent />
+        </Suspense>
+    );
+}

@@ -1,4 +1,3 @@
-import { X } from "lucide-react";
 import z from "zod";
 
 export const courseLevels = ["beginner", "intermediate", "advanced"] as const;
@@ -7,7 +6,7 @@ export const courseStatus = ["draft", "published", "archived"] as const;
 
 export const courseCategories = [
     "Development",
-    "Businceness",
+    "Business",
     "Finance",
     "It & Software",
     "Personal Development",

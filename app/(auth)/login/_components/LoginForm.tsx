@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { GithubIcon, Loader, Send } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { error } from "console";
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +25,7 @@ export default function LoginForm() {
                     onSuccess: () => {
                         toast.success("Signed in with Github, you will be redirected...");
                     },
-                    onError: (error) => {
+                    onError: () => {
                         toast.error("Internal Server Error");
                     },
                 },

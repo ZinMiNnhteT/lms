@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { requireAdmin } from "./require-admin";
 
 export async function adminGetDashboardStats() {
-    const session = await requireAdmin();
+    await requireAdmin();
 
     const [totalSignups, totalCustomers, totalCourses, totalLessons] = await Promise.all([
         //total signups

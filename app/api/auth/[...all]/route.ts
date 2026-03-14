@@ -7,7 +7,6 @@ import {
   type SlidingWindowRateLimitOptions,
   detectBot,
   protectSignup,
-  shield,
   slidingWindow,
 } from "@arcjet/next";
 import arcjet from "@/lib/arcjet";

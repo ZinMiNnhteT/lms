@@ -8,7 +8,7 @@ import {CSS} from '@dnd-kit/utilities';
 import { AdminCoureSingularType } from "@/app/data/admin/admin-get-course";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import { ChevronDown, ChevronRight, FileText, GripVertical, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, FileText, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";

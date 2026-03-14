@@ -3,7 +3,6 @@ import { RenderDescription } from "@/components/rich-text-editor/RenderDescripti
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { useConstructUrl } from "@/hooks/use-construct-url";
 import { Separator } from "@radix-ui/react-select";
 import { IconBook, IconCategory, IconChartBar, IconChevronDown, IconClock, IconPlayerPlay } from "@tabler/icons-react";
 import { CheckIcon } from "lucide-react";
@@ -12,13 +11,14 @@ import { checkIfCourseBought } from "@/app/data/user/user-is-enrolled";
 import Link from "next/link";
 import { EnrollmentButton } from "./_components/EnrollmentButton";
 import { buttonVariants } from "@/components/ui/button";
+import { env } from "@/lib/env";
 
 type Params = Promise<{ slug: string }>;
 
 export default async function SlugPage({ params }: { params: Params }) {
     const { slug } = await params;
     const course = await getIndividualCourse(slug);
-    const thumbnailUrl = useConstructUrl(course.fileKey);
+    const thumbnailUrl = `${env.AWS_ENDPOINT_URL_S3}/${env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES}/${course.fileKey}`;
     const isEnrolled = await checkIfCourseBought(course.id);
 
     return (
