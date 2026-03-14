@@ -18,7 +18,7 @@ const aj = arcjet({
   ],
 });
 
-async function adminAuthHandler(request: NextRequest) {
+export async function authMiddleware(request: NextRequest) {
 	const sessionCookie = getSessionCookie(request);
 
 	if (!sessionCookie) {
@@ -28,16 +28,13 @@ async function adminAuthHandler(request: NextRequest) {
 	return NextResponse.next();
 }
 
-export default createMiddleware(aj, async (request: NextRequest) => {
-  const { pathname } = request.nextUrl;
-
-  if (pathname.startsWith("/admin")) {
-    return await adminAuthHandler(request);
-  }
-
-  return NextResponse.next();
-});
-
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth).*)"],
 };
+export default createMiddleware(aj, async (request: NextRequest) => {
+	if (request.nextUrl.pathname.startsWith("/admin")) {
+		return authMiddleware(request);
+	}
+
+	return NextResponse.next();
+});
