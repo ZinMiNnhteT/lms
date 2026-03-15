@@ -5,7 +5,7 @@ import { DndContext, DragEndEvent, DraggableSyntheticListeners, KeyboardSensor, 
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { ReactNode, useEffect, useState } from "react";
 import {CSS} from '@dnd-kit/utilities';
-import { AdminCourseSingularType } from "@/app/data/admin/admin-get-course";
+import { AdminCoureSingularType } from "@/app/data/admin/admin-get-course";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { ChevronDown, ChevronRight, FileText, GripVertical } from "lucide-react";
@@ -19,7 +19,7 @@ import { DeleteLesson } from "./DeleteLesson";
 import { DeleteChapter } from "./DeleteChapter";
 
 interface iAppProps {
-    data: AdminCourseSingularType;
+    data: AdminCoureSingularType;
 }
 
 interface SortableItemProps {
