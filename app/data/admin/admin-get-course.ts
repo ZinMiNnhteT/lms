@@ -50,4 +50,4 @@ export async function adminGetCourse(id: string) {
     return data;
 }
 
-export type AdminCoureSingularType = Awaited<ReturnType<typeof adminGetCourse>>;
+export type AdminCourseSingularType = Awaited<ReturnType<typeof adminGetCourse>>;

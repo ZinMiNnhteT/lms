@@ -65,7 +65,7 @@ export default function CourseCreationPage() {
     return (
         <>
             <div>
-                <Link href="/admin/coures" 
+                <Link href="/admin/courses" 
                     className={buttonVariants({
                     variant: "outline",
                     size: "icon",
