@@ -16,15 +16,19 @@ export const auth = betterAuth({
       clientId: process.env.AUTH_GITHUB_CLIENT_ID as string, 
       clientSecret: process.env.AUTH_GITHUB_CLIENT_SECRET as string, 
     }, 
+    google: { 
+      clientId: process.env.GOOGLE_CLIENT_ID as string, 
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
+    }, 
   },
 
   plugins: [
     emailOTP({
       async sendVerificationOTP({email, otp }) {
         await resend.emails.send({
-          from: 'MarshalLMS <onboarding@resend.dev>',
+          from: 'LMS <onboarding@resend.dev>',
           to: [email],
-          subject: 'MarshalLMS - Verify your email',
+          subject: 'LMS - Verify your email',
           html: `<p>Your OTP is <strong>${otp}</strong></p>`,
         });
       },
